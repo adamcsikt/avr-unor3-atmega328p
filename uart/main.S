@@ -40,7 +40,16 @@ main:
     ldi r16, 0b00000010
     sts TCCR1B, r16
 
-    sei
+
+    ; --- Timer0 with overflow interrupt (60ms wait for HC-SR04)
+    ldi r16, 0b00000101
+    sts TCCR0B, r16
+
+    ldi r16, 0b00000001
+    sts TIMSK0, r16
+
+
+    sei ; --- Set Global Interrupt
 
 loop:
     sbi PORTD, 5
