@@ -9,7 +9,9 @@ This repo contains my early learning projects focused on low-level microcontroll
 *   **`ultrasonic-assembly`**: Reading data from an ultrasonic distance sensor (like HC-SR04). Good practice for precise timing, hardware counters, and handling external interrupts in Assembly.
 
 ### How to run
-Each folder has its own `Makefile`. To build and flash a project to the board, just navigate to the folder and run:
+Each folder has its own `Makefile`. You'll need the AVR toolchain (`avr-gcc` and `avrdude`) installed. It's primarily set up for Linux, but it works completely fine on Windows too if you have the tools configured. 
+
+To build and flash a project to the board, just navigate to the folder and run:
 
     cd motor-control
     make
