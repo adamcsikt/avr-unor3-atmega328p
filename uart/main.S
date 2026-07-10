@@ -57,15 +57,48 @@ wait_10_us:
     rjmp loop
 
 
-echo_low:
+PCINT2_vect:
+    push r16
+    in r16, SREG
+    push r16
 
+    sbis PIND, 4
+    rjmp echo_low
 
 
 echo_high:
+    ldi r16, 0
+    sts TCNT1H, r16
+    sts TCNT1L, r16
+
+    rjmp exit_pcint_interrupt
 
 
+echo_low:
+    lds r24, TCNT1L
+    lds r25, TCNT1H
 
-PCINT2_vect:
+    ldi r18, 0
+
+devide:
+    subi r24, 116
+    sbci r25, 0
+
+    brcs done
+
+    inc r18
+    rjmp devide
+
+done:
+    ldi r19, 1
+
+
+exit_pcint_interrupt:
+    pop r16
+    out SREG, r16
+    pop r16
+
+    reti
 
 
 ; --- use push to save to the stack, pop gets it back from it, LIFO (last in, first out)
