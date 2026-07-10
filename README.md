@@ -9,7 +9,9 @@ This repo contains my early learning projects focused on low-level microcontroll
 *   **`ultrasonic-assembly`**: Reading data from an ultrasonic distance sensor (like HC-SR04). Good practice for precise timing, hardware counters, and handling external interrupts in Assembly.
 
 ### How to run
-Each folder has its own `Makefile`. You'll need the AVR toolchain (`avr-gcc` and `avrdude`) installed. It's primarily set up for Linux, but it works completely fine on Windows too if you have the tools configured. 
+Each folder has its own `Makefile`. You'll need the AVR toolchain (`avr-gcc` and `avrdude`) installed. It's primarily set up for Linux (Fedora), but it works completely fine on Windows too if you have the tools configured. 
+
+**Watch out on other OS:** Makefile may have to be changed on other distros, on Windows at least the PORT must be changed.
 
 To build and flash a project to the board, just navigate to the folder and run:
 
