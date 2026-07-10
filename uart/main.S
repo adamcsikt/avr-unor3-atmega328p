@@ -2,6 +2,7 @@
 #include <avr/io.h>
 
 .global main
+.global PCINT2_vect ; --- Port D pins interrupt vector
 .global USART_UDRE_vect ; --- address 0x0026
 
 .section .data
@@ -24,15 +25,48 @@ main:
     ldi r16, 0b00001000
     sts UCSR0B, r16
 
+
+    ; --- HC-SR04 Ultrasonic distance sensor
+    sbi DDRD, 5 ; Port D bit 5 -> digital pin 5 (trig pin)
+    cbi DDRD, 4 ; Port D bit 4 -> digital pin 4 (echo pin)
+
+    ; --- Pin change interrupt for HC-SR04
+    ldi r16, 0b00000100
+    sts PCICR, r16
+
+    ldi r16, 0b00010000
+    sts PCMSK2, r16
+
+    ldi r16, 0b00000010
+    sts TCCR1B, r16
+
     sei
 
-    ldi r16, 0b00101000
-    sts UCSR0B, r16
-
 loop:
+    sbi PORTD, 5
+
+    ; --- 10 us wait
+    ldi r17, 53
+wait_10_us:
+    dec r17
+    brne wait_10_us
+
+    cbi PORTD, 5
 
 
     rjmp loop
+
+
+echo_low:
+
+
+
+echo_high:
+
+
+
+PCINT2_vect:
+
 
 ; --- use push to save to the stack, pop gets it back from it, LIFO (last in, first out)
 USART_UDRE_vect:
