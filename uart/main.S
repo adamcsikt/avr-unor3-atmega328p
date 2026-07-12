@@ -4,6 +4,7 @@
 .global main
 .global PCINT2_vect ; --- Port D pins interrupt vector
 .global USART_UDRE_vect ; --- address 0x0026
+.global TIMER0_OVF_vector
 
 .section .data
 
@@ -48,20 +49,13 @@ main:
     ldi r16, 0b00000001
     sts TIMSK0, r16
 
+    ldi r20, 0
 
     sei ; --- Set Global Interrupt
 
 loop:
-    sbi PORTD, 5
-
-    ; --- 10 us wait
-    ldi r17, 53
-wait_10_us:
-    dec r17
-    brne wait_10_us
-
-    cbi PORTD, 5
-
+    cpi r19, 1
+    brne loop
 
     rjmp loop
 
@@ -122,4 +116,30 @@ USART_UDRE_vect:
     out SREG, r16
     pop r16
 
+    reti
+
+
+TIMER0_OVF_vect:
+    push r16
+    in r16, SREG
+    push r16
+
+    inc r20
+    cpi r20, 4
+    brne exit_timer0
+
+    ldi r20, 0
+    ldi r19, 0
+
+    sbi PORTD, 5
+    ldi r17, 53
+wait_10_us_isr:
+    dec r17
+    brne wait_10_us_isr
+    cbi PORTD, 5
+
+exit_timer0:
+    pop r16
+    out SREG, r16
+    pop r16
     reti
